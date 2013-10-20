@@ -1,5 +1,7 @@
 #! /usr/local/bin/python
 import os
+import xml.etree.ElementTree as ET
+
 import flask
 from flask import (
     Flask,
@@ -28,7 +30,7 @@ def index():
     return render_template("index.html")
 
 @app.route('/books', methods=['GET','POST'])
-def upload():
+def books():
 
     if request.method == 'POST':
         # POST from book input form
@@ -47,12 +49,30 @@ def upload():
         conn = S3Connection(access, secret)
         bucket = conn.get_bucket('epubjs.books')
         books = []
-        for prefix in bucket.list(delimiter='/'):
-            cover_page = ''
-            for key in bucket.get_all_keys(prefix=prefix.name):
-                if key.name.endswith('cover.jpg'):
-                    cover_page = key.name
-            books.append({ 'title':prefix.name[:-1], 'cover_url': cover_page })
+
+        for prefix in bucket.list(delimiter='/'): 
+            book = { 'url': prefix.name[:-1] }
+            for key in bucket.list(prefix=prefix.name):
+                namespaces = { 'opf': '{http://www.idpf.org/2007/opf}',
+                                'dc': '{http://purl.org/dc/elements/1.1/}'
+                            }
+                if key.name.endswith('content.opf'):
+                    root = ET.fromstring(key.get_contents_as_string())
+                    title = root.find('{opf}metadata/{dc}title'.format(**namespaces))
+                    if title is not None:
+                        book['title'] = title.text
+                    author = root.find('{opf}metadata/{dc}creator'.format(**namespaces))
+                    if author is not None:
+                        book['author'] = author.text
+                    # cover in the manifest does not contain the complete path to the coverpage...
+                    #cover = root.find("{opf}manifest/*[@id='coverpage']".format(**namespaces))
+                    #if cover is not None:
+                    #    book['cover'] = cover.attrib['href']
+
+                elif key.name.endswith('cover.jpg'):
+                    book['cover'] = key.name
+
+            books.append(book)
 
         return jsonify(books=books)
 
