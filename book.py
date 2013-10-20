@@ -20,11 +20,11 @@ class Book():
     init with book_url to fetch epub file from url
     init with book_file hand an uploaded file
     """
-    def __init__(self, book_url=None, book_file=None, unzipped=False):
+    def __init__(self, filename, book_url=None, book_file=None, unzipped=False):
 
         if book_file:
             self.zip_file = self.getZipFile(book_file)
-            self.file_dir = self.getFileDir(self.zip_file)
+            self.file_dir = self.getFileDir(filename)
             self.uploadS3(self.zip_file, self.file_dir) ## Only uploads unzipped epub
         
         if book_url:
@@ -33,7 +33,6 @@ class Book():
             ## fetch the epub file
             self.book, self.file_name = self.fetchBook(self.url)
             ## get book_id and future unzipped_dir_name from the file_name
-            self.book_id = self.getBookId(self.file_name)
 
             ## store the book
             ## NOT IMPLEMENTED YET
@@ -41,16 +40,8 @@ class Book():
     def getZipFile(self, book_file):
         return ZipFile(StringIO.StringIO(book_file.read()))
 
-    def getFileDir(self, zip_file):
-
-        file_dir = None
-
-        for f in zip_file.filelist:
-            m = re.match(r'([\d]+)', f.filename)
-            if m and not file_dir:
-                file_dir = m.group(0)
-
-        return file_dir + '/'
+    def getFileDir(self, filename):
+        return filename[:filename.find('.epub')] + '/'
 
     def uploadS3(self, zip_file, file_dir):
         for f in zip_file.filelist:
@@ -98,13 +89,6 @@ class Book():
             return url.path[url.path.rfind('/')+1:] + '.epub'
         else:
             return url.path[url.path.rfind('/')+1:]
-
-    def getBookId(self, file_name):
-        return file_name[:file_name.find('.')]
-
-    def getDirName(self, book_file_name):
-        book_dir_name = book_file_name[:book_file_name.find('.')]
-        return book_dir_name + '/'
 
 class ValidationError(Exception):
     pass
