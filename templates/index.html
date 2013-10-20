@@ -1,19 +1,131 @@
 <!DOCTYPE html>
 <html lang="en-us">
-	<head>
-    <meta charset="utf-8">
-		<title>Gutenberg Reader</title>
-  </head>
+<head>
+<meta charset="utf-8">
+<title>FuturePress Web Reader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FuturePress is an open source JavaScript ereader that allows ebooks to be treated like normal web resources.">
+<meta name="author" content="FuturePress">
 
-    <body>
+
+<!-- Le styles -->
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="../static/css/custom.css" rel="stylesheet">
+<link rel="stylesheet" href="../static/css/font-awesome.min.css">
+<script type="text/javascript" src="../static/js/libs/jquery-1.9.0.min.js"></script>
+<!--[if IE 7]>
+  <link rel="stylesheet" href="css/font-awesome-ie7.min.css">
+<![endif]-->
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<header id="header" class="site-header">
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span12">
+        <h1 class="site-title pull-left"><a href="#"><i class="icon-cog"></i> FuturePress</a></h1>
+        
+        <ul class="unstyled inline pull-right top-menu">
+          <li><a href="http://futurepress.org" class="external">Home</a></li>
+          <li><a href="https://github.com/fchasen/epub.js/" class="external">Code</a></li>         
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<section id="details" class="details">
+    <div class="container">
         <div id="book">
-            <h3>Paste a Link to Project Gutenberg Here:</h3>
+            <i class="icon-globe icon-2x pull-left"></i>
+            <h3>Paste a link to an Epub here:</h3>
             <form action='/upload' method="POST" enctype="multipart/form-data">
-                <input type="file" name="file"></input>
+                <input id="lefile" type="file" name="file" style="display:none">
+                <div class="input-append">
+                <input id="photoCover" class="input-large" type="text">
+                <a class="btn" onclick="$('input[id=lefile]').click();">Browse</a>
+                </div>
+                    <script type="text/javascript">
+                    $('input[id=lefile]').change(function() {
+                    $('#photoCover').val($(this).val());
+                    });
+                    </script>
+                  <br/>
                 <input type="submit"></input>
             </form>
         </div>
-  
-    </body>
+    </div>
+</section>   
+<section id="testimonials" class="testimonials">
+      <div class="container">
+        <div class="row-fluid">
+          <div class="span4">
+            <blockquote>
+              <div>
+                <i class="icon-quote-left icon-3x"></i>
+                <p>When conceptualizing ebook delivery on the web, our approach is to publish books that are *of* the web, and not just *on* the web. Our goal is to deliver books as web resources.</p>
+                <small>Eric Wilde <cite title="Source Title">Architect in EMC's Information Intelligence Group</cite></small>
+              </div>
+            </blockquote>
+          </div>
+          <div class="span4">
+            <blockquote>
+              <div>
+                <i class="icon-quote-left icon-3x"></i>
+                <p>The experience of reading an ebook depends on the capabilities of the software used to read it, blurring the boundary between book content and book context.  This context can also include other people reading the same book.</p>
+                <small>Bob Glushko <cite title="Source Title">Professor, UC Berkeley</cite></small>
+              </div>
+            </blockquote>
+          </div>
+          <div class="span4">
+            <blockquote>
+              <div>
+                <i class="icon-quote-left icon-3x"></i>
+                <p>I should be able to read a book regardless of what type of device or application I want to use. It’s like that for things like music and video! But not ebooks.  :(</p>
+                <small>Jake Hartnell <cite title="Source Title">FuturePress Product Manager</cite></small>
+              </div>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    
+    </section>   
+
+    <section id="contact" class="contact">
+      <div class="container">
+        <div class="row-fluid">
+          <h2>Feedback & Questions</h2>
+          <p>We'd love to hear from you—especially if you want to contribute to the project, or are interested in making publishing more standardized and open.</p>
+          
+          <a href="mailto:jake.hartnell@berkeley.edu">jake.hartnell@berkeley.edu</a>
+          <ul class="unstyled inline social">
+            <li><a href="https://twitter.com/JakeHartnell"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://github.com/fchasen/epub.js/"><i class="icon-github-alt"></i></a></li>
+          </ul>
+            Epub is a registered trademark of the IDPF.
+        </div>
+      </div>
+    </section>
+    
+    <footer id="footer" class="footer">
+      <div class="container">
+        <div class="row-fluid">
+          <div class="span12">
+            <h1 class="footer-title pull-left"><a href="#"><i class="icon-cog"></i> FuturePress</a></h1>
+            <ul class="unstyled inline pull-right footer-menu">
+              <li><a href="http://futurepress.org">Home</a></li>
+              <li><a href="https://github.com/fchasen/epub.js/" class="external">Code</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+</body>
 </html>
+
 
