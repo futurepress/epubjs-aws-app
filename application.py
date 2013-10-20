@@ -5,7 +5,9 @@ from flask import (
     Flask,
     request,
     render_template,
-    redirect
+    redirect,
+    jsonify,
+    make_response
 )
 
 import boto
@@ -20,54 +22,62 @@ application = Flask(__name__)
 app = application
 app.debug = True
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
 
-    if request.method == 'POST':
+    return render_template("index.html")
 
-        book_url = request.form['book_input']
-
-        try:
-            book_obj = Book(book_url, unzipped=True)
-        except ValidationError as e:
-            return str(e)
-
-        return redirect('/book/'+book_obj.book_id)
-
-    else:
-        return render_template("index.html")
-
-@app.route('/upload', methods=['POST'])
+@app.route('/books', methods=['GET','POST'])
 def upload():
 
-    book_file = request.files['file']
-    book = Book(book_file=book_file)
-    book_location = book.file_dir[:-1]
-    return redirect('/book/'+book_location)
+    if request.method == 'POST':
+        # POST from book input form
+        if request.files['file']:
+            # POST is a file upload
+            book_file = request.files['file']
+            if book_file.content_type == 'application/epub+zip':
+                book = Book(book_file.filename, book_file=book_file)
+                book_location = book.file_dir[:-1]
+                return redirect('/book/'+book_location)
+            else:
+                return "Invalid Epub Uploaded"
 
-@app.route('/book/<int:book>')
-@app.route('/book/<int:book>/<path:resource_location>', methods=['GET'])
+    if request.method == 'GET':
+        # GET books returns json of books in S3
+        conn = S3Connection(access, secret)
+        bucket = conn.get_bucket('epubjs.books')
+        books = []
+        for prefix in bucket.list(delimiter='/'):
+            cover_page = ''
+            for key in bucket.get_all_keys(prefix=prefix.name):
+                if key.name.endswith('cover.jpg'):
+                    cover_page = key.name
+            books.append({ 'title':prefix.name[:-1], 'cover_url': cover_page })
+
+        return jsonify(books=books)
+
+@app.route('/book/<book>', methods=['GET'])
+@app.route('/book/<book>/<path:resource_location>', methods=['GET'])
 def book(book=None, resource_location=None):
 
     if book and not resource_location:
-        book_location = 'book/'+str(book)+'/'
-
+        book_location = 'book/'+book+'/'
+        app.logger.debug(book_location)
         return render_template("book.html", book_location=book_location)
 
     elif book and resource_location:
         #app.logger.debug('/'+str(book) +'/'+resource_location)
         conn = S3Connection(access, secret)
         bucket = conn.get_bucket('epubjs.books')
-        k = Key(bucket=bucket, name='/'+str(book)+'/'+resource_location)
-        #app.logger.debug(k)
+        k = bucket.get_key('/'+str(book)+'/'+resource_location)
 
-        meta_data = k.get_metadata('Content-Type')
-        app.logger.debug(meta_data)
+        resp = make_response(k.get_contents_as_string())
+        if k.content_type:
+            resp.headers['Content-Type'] = k.content_type
 
-        return k.get_contents_as_string()
+        return resp
     else:
-        return render_template("404.html")
+        return "bad url"
 
 if __name__ == "__main__":
-
     application.run(host='0.0.0.0', debug=True)
