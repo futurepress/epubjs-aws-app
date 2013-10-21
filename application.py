@@ -26,7 +26,6 @@ app.debug = True
 
 @app.route('/', methods=['GET'])
 def index():
-
     return render_template("index.html")
 
 @app.route('/books', methods=['GET','POST'])
@@ -43,6 +42,8 @@ def books():
                 return redirect('/book/'+book_location)
             else:
                 return "Invalid Epub Uploaded"
+        else:
+            return "Invalid Epub Uploaded"
 
     if request.method == 'GET':
         # GET books returns json of books in S3
@@ -57,6 +58,7 @@ def books():
                                 'dc': '{http://purl.org/dc/elements/1.1/}'
                             }
                 if key.name.endswith('content.opf'):
+                    # Parse content.opf to find title, author, and cover
                     root = ET.fromstring(key.get_contents_as_string())
                     title = root.find('{opf}metadata/{dc}title'.format(**namespaces))
                     if title is not None:
@@ -70,6 +72,7 @@ def books():
                     #    book['cover'] = cover.attrib['href']
 
                 elif key.name.endswith('cover.jpg'):
+                    # find file in book bucket that endswith cover.jpg (assume this is the cover)
                     book['cover'] = key.name
 
             books.append(book)
@@ -81,11 +84,14 @@ def books():
 def book(book=None, resource_location=None):
 
     if book and not resource_location:
+        # /book/book_name renders the reader with the correct book_location
         book_location = 'book/'+book+'/'
         app.logger.debug(book_location)
         return render_template("book.html", book_location=book_location)
 
     elif book and resource_location:
+        # When epub.js requests book resources at /book/book_name/resource_location
+        # get them from s3
         #app.logger.debug('/'+str(book) +'/'+resource_location)
         conn = S3Connection(access, secret)
         bucket = conn.get_bucket('epubjs.books')

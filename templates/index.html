@@ -62,42 +62,41 @@
             </form>
         </div>
     </div>
-</section>   
-<section id="testimonials" class="testimonials">
-      <div class="container">
+</section>
+<section id="library" class="library">
+    <div class="container">
+        <h3>Or choose a book from the library</h3>
         <div class="row-fluid">
-          <div class="span4">
-            <blockquote>
-              <div>
-                <i class="icon-quote-left icon-3x"></i>
-                <p>When conceptualizing ebook delivery on the web, our approach is to publish books that are *of* the web, and not just *on* the web. Our goal is to deliver books as web resources.</p>
-                <small>Eric Wilde <cite title="Source Title">Architect in EMC's Information Intelligence Group</cite></small>
-              </div>
-            </blockquote>
-          </div>
-          <div class="span4">
-            <blockquote>
-              <div>
-                <i class="icon-quote-left icon-3x"></i>
-                <p>The experience of reading an ebook depends on the capabilities of the software used to read it, blurring the boundary between book content and book context.  This context can also include other people reading the same book.</p>
-                <small>Bob Glushko <cite title="Source Title">Professor, UC Berkeley</cite></small>
-              </div>
-            </blockquote>
-          </div>
-          <div class="span4">
-            <blockquote>
-              <div>
-                <i class="icon-quote-left icon-3x"></i>
-                <p>I should be able to read a book regardless of what type of device or application I want to use. It’s like that for things like music and video! But not ebooks.  :(</p>
-                <small>Jake Hartnell <cite title="Source Title">FuturePress Product Manager</cite></small>
-              </div>
-            </blockquote>
-          </div>
+            <div id="bookList" class="span12">
+            </div>
         </div>
-      </div>
-    
-    </section>   
-
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.get('/books', function(data){
+                    console.log(data.books);
+                    $bookList = $('#bookList');
+                    $.each(data.books, function(){
+                        if(this.cover){
+                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
+                                        "<p>By "+ this.author +"</p>" +
+                                        "<img height='150' width='50' src='/book/"+this.cover+"' alt='No Cover'>" +
+                                        "</div>"
+                                        )
+                        } else {
+                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
+                                        "<p>By "+ this.author +"</p>" +
+                                        "<p>no cover image</p>" +
+                                        "</div>"
+                                        )
+                        }
+                        console.log(this)
+                    });
+                });
+                console.log('populating book list');
+            });
+        </script>
+    </div>
+</section>
     <section id="contact" class="contact">
       <div class="container">
         <div class="row-fluid">
