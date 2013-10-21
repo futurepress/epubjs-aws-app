@@ -44,6 +44,11 @@ a:hover {
     margin-left: 30px !important;
 }
 
+.book img {
+    width: 70%;
+    max-height: 180px;
+}
+
 
 /*************************************************************
                              layout
