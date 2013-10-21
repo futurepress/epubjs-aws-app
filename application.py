@@ -33,15 +33,23 @@ def books():
 
     if request.method == 'POST':
         # POST from book input form
-        if request.files['file']:
-            # POST is a file upload
-            book_file = request.files['file']
+
+        book_url = request.form.get('book_url', None)
+        book_file = request.files.get('file', None)
+
+        if book_url:
+            # POST is a book url
+            return redirect('/')
+
+        elif book_file:
+            # POST is a epub file upload
             if book_file.content_type == 'application/epub+zip':
                 book = Book(book_file.filename, book_file=book_file)
                 book_location = book.file_dir[:-1]
                 return redirect('/book/'+book_location)
             else:
                 return "Invalid Epub Uploaded"
+
         else:
             return "Invalid Epub Uploaded"
 

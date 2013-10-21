@@ -41,25 +41,41 @@
 </header>
 <section id="details" class="details">
     <div class="container">
-        <div id="book">
-            <i class="icon-globe icon-2x pull-left"></i>
-            <h3>Upload your Epub file here:</h3>
-            <form action='/books' method="POST" enctype="multipart/form-data">
-                <input id="lefile" type="file" name="file" style="display:none">
-                <div class="input-append">
-                <input id="fileInputText" class="input-large" type="text">
-                <a class="btn" onclick="$('input[id=lefile]').click();">Browse</a>
-                </div>
-                    <script type="text/javascript">
-                        $('input[id=lefile]').change(function() {
-                            var fileInputText = $(this).val();
-                            fileInputText = fileInputText.slice(fileInputText.lastIndexOf("\\")+1);
-                            $('#fileInputText').val(fileInputText);
-                        });
-                    </script>
-                  <br/>
-                 <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+        <h2>Books In Browsers Public Reading & Annotation Demo</h2>
+        <div class="row-fluid">
+            <div class="span5" id="bookUpload">
+                <i class="icon-globe icon-2x pull-left"></i>
+                <h4>Upload your Epub File</h4>
+                <form action='/books' method="POST" enctype="multipart/form-data">
+                    <input id="lefile" type="file" name="file" style="display:none">
+                    <div class="input-append">
+                    <input id="fileInputText" class="input-large" type="text" disabled>
+                    <a class="btn" onclick="$('input[id=lefile]').click();">Browse</a>
+                    </div>
+                        <script type="text/javascript">
+                            $('input[id=lefile]').change(function() {
+                                var fileInputText = $(this).val();
+                                fileInputText = fileInputText.slice(fileInputText.lastIndexOf("\\")+1);
+                                $('#fileInputText').val(fileInputText);
+                            });
+                        </script>
+                      <br/>
+                     <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="span2">
+                <h4>OR</h4>
+            </div>
+            <div class="span5" id="bookUrl">
+                <i class="icon-globe icon-2x pull-left"></i>
+                <h4>Paste a Link to your Epub</h4>
+                <form action="/books" method="POST" enctype="multipart/form-data">
+                    <div class="input-append">
+                    <input type="text" name="book_url" id="book_url" placeholder="url to epub file"/>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </section>
@@ -73,23 +89,22 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $.get('/books', function(data){
-                    console.log(data.books);
                     $bookList = $('#bookList');
                     $.each(data.books, function(){
+                        var author = this.author || 'unknown';
                         if(this.cover){
                             $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
-                                        "<p>By "+ this.author +"</p>" +
-                                        "<img src='/book/"+this.cover+"' alt='No Cover'>" +
+                                        "<p>By "+ author +"</p>" +
+                                        "<a href='/book/"+this.url+"'><img src='/book/"+this.cover+"' alt='No Cover'></a>" +
                                         "</div>"
-                                        )
+                                        );
                         } else {
                             $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
-                                        "<p>By "+ this.author +"</p>" +
+                                        "<p>By "+ author +"</p>" +
                                         "<p>no cover image</p>" +
                                         "</div>"
-                                        )
+                                        );
                         }
-                        console.log(this)
                     });
                 });
                 console.log('populating book list');

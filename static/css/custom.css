@@ -34,9 +34,7 @@ a:hover {
                             books
 **************************************************************/
 .book {
-    border: black;
-    border-width: 2px;
-    border-style: solid;
+    background: rgb(243, 243, 243);
     max-width: 22%;
     height: 300px;
     padding-left: 10px;
@@ -98,7 +96,7 @@ a:hover {
   /*background: rgb(0, 209, 218);*/
   background: rgb(110, 133, 134);
   color: #fff;
-  padding: 70px 0 50px !important;
+  padding: 30px 0 50px !important;
 }
 .details .container {
   max-width: 900px;
