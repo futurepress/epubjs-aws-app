@@ -64,7 +64,7 @@
                 <h4>OR</h4>
             </div>
             <div class="span5" id="bookUrl">
-                <h4>Paste a Link to Project Gutenberg</h4>
+                <h4>Paste a Link to <a href="http://www.gutenberg.org" target="_blank" style="color:white;">Project Gutenberg</a></h4>
                 <form action="/books" method="POST" enctype="multipart/form-data">
                     <div class="input-append">
                     <input type="text" name="book_url" id="book_url" placeholder="gutenberg.org/ebooks/2701"/>
@@ -89,13 +89,13 @@
                     $.each(data.books, function(){
                         var author = this.author || 'unknown';
                         if(this.cover){
-                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
+                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
                                         "<p>By "+ author +"</p>" +
-                                        "<a href='/book/"+this.url+"'><img src='/book/"+this.cover+"' alt='No Cover'></a>" +
+                                        "<a href='/book/"+this.url+"' target='_blank'><img src='/book/"+this.cover+"' alt='No Cover'></a>" +
                                         "</div>"
                                         );
                         } else {
-                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"'><h5>" + this.title + "</h5></a>" +
+                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
                                         "<p>By "+ author +"</p>" +
                                         "<p>no cover image</p>" +
                                         "</div>"
