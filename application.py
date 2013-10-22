@@ -57,7 +57,7 @@ def books():
                 return render_template("404.html", error_msg="Invalid Epub Uploaded")
 
         else:
-            return "Invalid Epub Uploaded"
+            return render_template("404.html", error_msg="Not a valid Gutenberg URL")
 
     if request.method == 'GET':
         # GET books returns json of books in S3
