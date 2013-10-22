@@ -49,7 +49,7 @@ def books():
 
         elif book_file:
             # POST is a epub file upload
-            if book_file.content_type == 'application/epub+zip':
+            if book_file.content_type == 'application/epub+zip' or book_file.content_type == 'application/octet-stream':
                 book = Book(book_file.filename, book_file=book_file)
                 book_location = book.file_dir[:-1]
                 return redirect('/book/'+book_location)
