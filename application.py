@@ -93,16 +93,23 @@ def books():
 
         return jsonify(books=books)
 
+@app.route('/book/<book>/<path:reader_locatiion>', methods=['GET'])
+@app.route('/book/<book>/', methods=['GET'])
 @app.route('/book/<book>', methods=['GET'])
-@app.route('/book/<book>/<path:resource_location>', methods=['GET'])
-def book(book=None, resource_location=None):
+def book(book=None, reader_locatiion=None):
 
-    if book and not resource_location:
+    if book:
         # /book/book_name renders the reader with the correct book_location
-        book_location = 'book/'+book+'/'
+        book_location = '/book/'+book+'/'
+        book_assets = '../../s3/'+book+'/'
         app.logger.debug(book_location)
-        return render_template("book.html", book_location=book_location)
+        return render_template("book_epubjs.html", book_location=book_location, book_assets=book_assets)
 
+    else:
+        return render_template("404.html", error_msg="URL Not Found")
+
+
+    """
     elif book and resource_location:
         # When epub.js requests book resources at /book/book_name/resource_location
         # get them from s3
@@ -116,9 +123,24 @@ def book(book=None, resource_location=None):
             resp.headers['Content-Type'] = k.content_type
 
         return resp
-    else:
-        return render_template("404.html", error_msg="URL Not Found")
+    """
 
+@app.route('/s3/<path:resource_location>', methods=['GET'])
+def resource(resource_location=None):
+
+    if resource_location:
+        # When epub.js requests book resources at /book/book_name/resource_location
+        # get them from s3
+        #app.logger.debug('/'+str(book) +'/'+resource_location)
+        conn = S3Connection(access, secret)
+        bucket = conn.get_bucket('epubjs.books')
+        k = bucket.get_key('/'+resource_location)
+
+        resp = make_response(k.get_contents_as_string())
+        if k.content_type:
+            resp.headers['Content-Type'] = k.content_type
+
+        return resp
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0', debug=True)
