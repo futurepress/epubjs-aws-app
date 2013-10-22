@@ -14,7 +14,7 @@ angular.module('Reader')
 				var silent = true;
 				
 				var isDocument = function(path) {
-					return (path.search(".xhtml") != -1);
+					return (path.search(".xhtml") != -1 || path.search(".html") != -1);
 				}
 				
 				var pathFromLocation	= function() {
@@ -28,7 +28,7 @@ angular.module('Reader')
 					return path;
 				}
 				
-				gAnalytics.init('UA-43609037-1');
+				gAnalytics.init('UA-45075604-1');
 				if(isDocument($location.path())) {
 					$scope.path = pathFromLocation();
 				} else {
