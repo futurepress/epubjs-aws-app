@@ -1,0 +1,2 @@
+access, secret = ('AKIAJ7OSEVABYAUHNDMA', 'BTqTIypHESO0YoQ0WxlLkN8RKlZuDseKS0/cxrLM')
+
