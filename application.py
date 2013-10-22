@@ -71,7 +71,7 @@ def books():
                 namespaces = { 'opf': '{http://www.idpf.org/2007/opf}',
                                 'dc': '{http://purl.org/dc/elements/1.1/}'
                             }
-                if key.name.endswith('content.opf'):
+                if key.name.endswith('content.opf') or key.name.endswith('package.opf'):
                     # Parse content.opf to find title, author, and cover
                     root = ET.fromstring(key.get_contents_as_string())
                     title = root.find('{opf}metadata/{dc}title'.format(**namespaces))
