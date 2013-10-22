@@ -31,7 +31,7 @@ class Book():
             self.unzipped = unzipped
             self.url = self.completeUrl(book_url)
             if 'gutenberg.org' in self.url.netloc:
-                self.url = self.switchGutenberg(self.url)
+                self.url = self.switchGutenbergUrl(self.url)
             else:
                 raise ValidationError("Not a valid Gutenberg URL")
             self.book, self.filename = self.fetchBook(self.url)
@@ -69,8 +69,7 @@ class Book():
 
         return urlparse(url_str)
 
-    def switchGutenberg(self, url):
-        base_url = 'http://snowy.arsc.alaska.edu/gutenberg/cache/generated/'
+    def switchGutenbergUrl(self, url):
         match = re.search('(\d+)', url.path)
         if match:
             return urlparse('http://snowy.arsc.alaska.edu/gutenberg/cache/generated/{0}/pg{0}.epub'.format(match.group(1)))
