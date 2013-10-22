@@ -42,7 +42,7 @@
         <h2>Public Reading & Annotation Demo</h2>
         <div id="createRow" class="row-fluid">
             <div class="span5" id="bookUpload">
-                <h4>Upload your Epub File</h4>
+                <h4>Upload an Epub File</h4>
                 <form action='/books' method="POST" enctype="multipart/form-data">
                     <input id="lefile" type="file" name="file" style="display:none">
                     <div class="input-append">
@@ -64,10 +64,10 @@
                 <h4>OR</h4>
             </div>
             <div class="span5" id="bookUrl">
-                <h4>Paste a Link to a Project Gutenberg Epub</h4>
+                <h4>Paste a Link to Project Gutenberg</h4>
                 <form action="/books" method="POST" enctype="multipart/form-data">
                     <div class="input-append">
-                    <input type="text" name="book_url" id="book_url" placeholder="url to gutenberg.org"/>
+                    <input type="text" name="book_url" id="book_url" placeholder="gutenberg.org/ebooks/2701"/>
                     <button type="submit" class="btn btn-default">Submit</button>
                     </div>
                 </form>
