@@ -39,8 +39,7 @@
 </header>
 <section id="details" class="details">
     <div class="container">
-        <i class="icon-globe icon-2x pull-left"></i>
-        <h2>Public Reading & Annotation</h2>
+        <h2>Public Reading & Annotation Demo</h2>
         <div id="createRow" class="row-fluid">
             <div class="span5" id="bookUpload">
                 <h4>Upload your Epub File</h4>
@@ -65,10 +64,10 @@
                 <h4>OR</h4>
             </div>
             <div class="span5" id="bookUrl">
-                <h4>Paste a Link to your Epub</h4>
+                <h4>Paste a Link to a Project Gutenberg Epub</h4>
                 <form action="/books" method="POST" enctype="multipart/form-data">
                     <div class="input-append">
-                    <input type="text" name="book_url" id="book_url" placeholder="url to epub file"/>
+                    <input type="text" name="book_url" id="book_url" placeholder="url to gutenberg.org"/>
                     <button type="submit" class="btn btn-default">Submit</button>
                     </div>
                 </form>
@@ -78,7 +77,7 @@
 </section>
 <section id="library" class="library">
     <div class="container">
-        <h3>Or choose a book from the library</h3>
+        <h3>Choose a book from the library</h3>
         <div class="row-fluid">
             <div id="bookList" class="span12">
             </div>

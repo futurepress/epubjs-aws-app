@@ -20,22 +20,24 @@ class Book():
     init with book_url to fetch epub file from url
     init with book_file hand an uploaded file
     """
-    def __init__(self, filename, book_url=None, book_file=None, unzipped=False):
+    def __init__(self, filename='', book_url=None, book_file=None, unzipped=False):
 
         if book_file:
             self.zip_file = self.getZipFile(book_file)
             self.file_dir = self.getFileDir(filename)
             self.uploadS3(self.zip_file, self.file_dir) ## Only uploads unzipped epub
-        
+
         if book_url:
             self.unzipped = unzipped
             self.url = self.completeUrl(book_url)
-            ## fetch the epub file
-            self.book, self.file_name = self.fetchBook(self.url)
-            ## get book_id and future unzipped_dir_name from the file_name
-
-            ## store the book
-            ## NOT IMPLEMENTED YET
+            if 'gutenberg.org' in self.url.netloc:
+                self.url = self.switchGutenberg(self.url)
+            else:
+                raise ValidationError("Not a valid Gutenberg URL")
+            self.book, self.filename = self.fetchBook(self.url)
+            self.zip_file = self.getZipFile(self.book)
+            self.file_dir = self.getFileDir(self.filename)
+            self.uploadS3(self.zip_file, self.file_dir) ## Only uploads unzipped epub
 
     def getZipFile(self, book_file):
         return ZipFile(StringIO.StringIO(book_file.read()))
@@ -58,21 +60,24 @@ class Book():
                 k.set_metadata('Content-Type', file_mime)
             k.set_contents_from_string(zip_file.read(f))
 
-    def completeUrl(self, book_url):
+    def completeUrl(self, url):
 
-        if book_url[:7] != 'http://':
-            url_str = 'http://' + book_url
+        if url[:7] != 'http://':
+            url_str = 'http://' + url
         else:
-            url_str = book_url
+            url_str = url
 
         return urlparse(url_str)
 
-    def fetchBook(self, url):
-        if '.epub' not in url.path:
-            url_str = url.geturl()+'.epub'
+    def switchGutenberg(self, url):
+        base_url = 'http://snowy.arsc.alaska.edu/gutenberg/cache/generated/'
+        match = re.search('(\d+)', url.path)
+        if match:
+            return urlparse('http://snowy.arsc.alaska.edu/gutenberg/cache/generated/{0}/pg{0}.epub'.format(match.group(1)))
         else:
-            url_str = url.geturl()
+            raise ValidationError("No Gutenberg book found in URL")
 
+    def fetchBook(self, url):
         try:
             request = Request(url.geturl())
             request.add_header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; es-ES; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5")
@@ -81,6 +86,7 @@ class Book():
 
         except HTTPError, e:
             print e.fp.read()
+            raise ValidationError("404 not found, could not fetch book")
 
         return doc, self.getFileName(url)
 

@@ -39,7 +39,13 @@ def books():
 
         if book_url:
             # POST is a book url
-            return redirect('/')
+            try:
+                book = Book(book_url=book_url)
+            except ValidationError as e:
+                return render_template("404.html", error_msg=e)
+
+            book_location = book.file_dir[:-1]
+            return redirect('/book/'+book_location)
 
         elif book_file:
             # POST is a epub file upload
