@@ -29,11 +29,9 @@
   <div class="container">
     <div class="row-fluid">
       <div class="span12">
-        <h1 class="site-title pull-left"><a href="#"><i class="icon-cog"></i> FuturePress</a></h1>
-        
+        <h1 class="site-title pull-left"><a href="/"><i class="icon-cog"></i> FuturePress</a></h1>
         <ul class="unstyled inline pull-right top-menu">
-          <li><a href="http://futurepress.org" class="external">Home</a></li>
-          <li><a href="https://github.com/fchasen/epub.js/" class="external">Code</a></li>         
+          <li><a href="https://github.com/futurepress/epubjs-aws-app" class="external">Code</a></li>         
         </ul>
       </div>
     </div>
@@ -41,10 +39,10 @@
 </header>
 <section id="details" class="details">
     <div class="container">
-        <h2>Books In Browsers Public Reading & Annotation Demo</h2>
-        <div class="row-fluid">
+        <i class="icon-globe icon-2x pull-left"></i>
+        <h2>Public Reading & Annotation</h2>
+        <div id="createRow" class="row-fluid">
             <div class="span5" id="bookUpload">
-                <i class="icon-globe icon-2x pull-left"></i>
                 <h4>Upload your Epub File</h4>
                 <form action='/books' method="POST" enctype="multipart/form-data">
                     <input id="lefile" type="file" name="file" style="display:none">
@@ -67,7 +65,6 @@
                 <h4>OR</h4>
             </div>
             <div class="span5" id="bookUrl">
-                <i class="icon-globe icon-2x pull-left"></i>
                 <h4>Paste a Link to your Epub</h4>
                 <form action="/books" method="POST" enctype="multipart/form-data">
                     <div class="input-append">

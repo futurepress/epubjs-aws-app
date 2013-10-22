@@ -48,7 +48,7 @@ def books():
                 book_location = book.file_dir[:-1]
                 return redirect('/book/'+book_location)
             else:
-                return "Invalid Epub Uploaded"
+                return render_template("404.html", error_msg="Invalid Epub Uploaded")
 
         else:
             return "Invalid Epub Uploaded"
@@ -111,7 +111,8 @@ def book(book=None, resource_location=None):
 
         return resp
     else:
-        return "bad url"
+        return render_template("404.html", error_msg="URL Not Found")
+
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0', debug=True)

@@ -55,7 +55,10 @@ a:hover {
   min-height: 20px;
   padding: 20px 0;
 }
- 
+
+#createRow {
+    padding-top: 20px;
+}
  
 /*************************************************************
                              header
