@@ -78,6 +78,7 @@
 <section id="library" class="library">
     <div class="container">
         <h3>Choose a book from the library</h3>
+        <img id="loader" src="/static/images/loader.gif">
         <div class="row-fluid">
             <div id="bookList" class="span12">
             </div>
@@ -86,18 +87,22 @@
             $(document).ready(function(){
                 $.get('/books', function(data){
                     $bookList = $('#bookList');
+                    $('#loader').hide();
                     $.each(data.books, function(){
                         var author = this.author || 'unknown';
                         if(this.cover){
-                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
+                            $bookList.append("<div class='span3 book'>"+
+                              "<a class='book_link' href='/book/"+this.url+"' target='_blank'><img class='cover' src='/s3/"+this.cover+"' alt='Cover'></a>" + 
+                              "<a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
                                         "<p>By "+ author +"</p>" +
-                                        "<a href='/book/"+this.url+"' target='_blank'><img src='/s3/"+this.cover+"' alt='No Cover'></a>" +
+                                         
                                         "</div>"
                                         );
                         } else {
-                            $bookList.append("<div class='span3 book'><a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
+                            $bookList.append("<div class='span3 book'>"+
+                              "<a class='book_link' href='/book/"+this.url+"' target='_blank'><img class='cover' src='/static/images/default_cover.png' alt='Cover'></a>" +
+                              "<a href='/book/"+this.url+"' target='_blank'><h5>" + this.title + "</h5></a>" +
                                         "<p>By "+ author +"</p>" +
-                                        "<p>no cover image</p>" +
                                         "</div>"
                                         );
                         }
