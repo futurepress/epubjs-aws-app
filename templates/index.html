@@ -35,11 +35,20 @@
         </ul>
       </div>
     </div>
+    <div class="row-fluid">
+      <div class="site-description">
+        <h2>Public Domain Reading and Annotation</h2>
+      </div>
+    </div>
   </div>
 </header>
 <section id="details" class="details">
     <div class="container">
-        <h2>Public Reading & Annotation Demo</h2>
+        <p>As a demo for Books in Browsers 2013, FuturePress has created an open annotation space for public domain 
+        books from <a class="whiteLink" href="http://www.gutenberg.org" target="_blank">Project Gutenberg</a>. Upload a book from Project Gutenberg
+        or simply paste the link to the book. You'll be able to read the book using <a class="whiteLink" href="https://github.com/futurepress/epub.js" target="_blank">Epub.js</a> 
+        and annotate with <a href="http://hypothes.is/" target="_blank" class="whiteLink">Hypothe.is.</a></p>
+        <p>We hope you'll share our excitement for making books first class web resources.</p>
         <div id="createRow" class="row-fluid">
             <div class="span5" id="bookUpload">
                 <h4>Upload an Epub File</h4>
@@ -64,7 +73,7 @@
                 <h4>OR</h4>
             </div>
             <div class="span5" id="bookUrl">
-                <h4>Paste a Link to <a href="http://www.gutenberg.org" target="_blank" style="color:white;">Project Gutenberg</a></h4>
+                <h4>Paste a Link to <a href="http://www.gutenberg.org" target="_blank" class="whiteLink">Project Gutenberg</a></h4>
                 <form action="/books" method="POST" enctype="multipart/form-data">
                     <div class="input-append">
                     <input type="text" name="book_url" id="book_url" placeholder="gutenberg.org/ebooks/2701"/>
@@ -77,7 +86,7 @@
 </section>
 <section id="library" class="library">
     <div class="container">
-        <h3>Choose a book from the library</h3>
+        <h3 id="library_header">Choose a book from the library</h3>
         <img id="loader" src="/static/images/loader.gif">
         <div class="row-fluid">
             <div id="bookList" class="span12">
@@ -118,12 +127,13 @@
           <h2>Feedback & Questions</h2>
           <p>We'd love to hear from you—especially if you want to contribute to the project, or are interested in making publishing more standardized and open.</p>
           
-          <a href="mailto:jake.hartnell@berkeley.edu">jake.hartnell@berkeley.edu</a>
+          <a href="mailto:epubjs@googlegroups.com">epubjs@googlegroups.com</a>
           <ul class="unstyled inline social">
             <li><a href="https://twitter.com/JakeHartnell"><i class="icon-twitter"></i></a></li>
-            <li><a href="https://github.com/fchasen/epub.js/"><i class="icon-github-alt"></i></a></li>
+            <li><a href="https://github.com/futurepress/epub.js/"><i class="icon-github-alt"></i></a></li>
           </ul>
-            Epub is a registered trademark of the IDPF.
+          Epub is a registered trademark of the IDPF.</br>
+          Project Gutenberg is a registered trademark
         </div>
       </div>
     </section>
@@ -133,10 +143,6 @@
         <div class="row-fluid">
           <div class="span12">
             <h1 class="footer-title pull-left"><a href="#"><i class="icon-cog"></i> FuturePress</a></h1>
-            <ul class="unstyled inline pull-right footer-menu">
-              <li><a href="http://futurepress.org">Home</a></li>
-              <li><a href="https://github.com/fchasen/epub.js/" class="external">Code</a></li>
-            </ul>
           </div>
         </div>
       </div>
