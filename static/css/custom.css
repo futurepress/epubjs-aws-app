@@ -30,6 +30,11 @@ a:hover {
   color: rgb(255, 13, 13);
 }
 
+.whiteLink {
+    color: white;
+    text-decoration: underline;
+}
+
 /*************************************************************
                             books
 **************************************************************/
@@ -70,9 +75,10 @@ a:hover {
   padding: 20px 0;
 }
 
-#createRow {
-    padding-top: 20px;
+#library_header {
+    margin: 20px 0 20px 0;
 }
+
  
 /*************************************************************
                              header
