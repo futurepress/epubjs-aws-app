@@ -58,7 +58,7 @@
  * different widgets) is probably best made explicity, rather than implicit.
  */
 angular.module('Reader')
-	.directive('hypothesis', ['$document', function($document) {
+	.directive('hypothesis', ['$window', function($window) {
 		return {
 			restrict: "E",
 			scope: {
@@ -80,17 +80,13 @@ angular.module('Reader')
 					});
 				}
 
-				var annotator = window.annotator = new window.Annotator.Host(element, {
-						"app": "https://hypothes.is/app/"
-        });
+        var body = $window.document.body;
 
-        toolbar = new Annotator.Plugin.Toolbar($document, {
-            "container": "#singlepage"
+				var annotator = window.annotator = new window.Annotator.Host(body, {
+						"app": "https://hypothes.is/app/",
+            "Toolbar": {container:"#singlepage"}
         });
-        toolbar.annotator = annotator;
-        toolbar.pluginInit();
-
-        annotator.plugins.Toolbar = toolbar;
+        annotator.frame.appendTo(element);
 
 				annotator.subscribe('annotationEditorShown', function () {
 					setSinglePage(true);
@@ -103,11 +99,11 @@ angular.module('Reader')
 
 				annotator.subscribe('annotationEditorHidden', function () {
 					setSinglePage(false);
-					window.annotator.setVisibleHighlights(false)
+					//window.annotator.setVisibleHighlights(false)
 				});
 				annotator.subscribe('annotationViewerHidden', function () {
 					setSinglePage(false);
-					window.annotator.setVisibleHighlights(false)
+					//window.annotator.setVisibleHighlights(false)
 				});
 
 				scope.annotator = annotator;
