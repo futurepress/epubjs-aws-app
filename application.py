@@ -60,19 +60,23 @@ def books():
             return render_template("404.html", error_msg="Not a valid Gutenberg URL")
 
     if request.method == 'GET':
-        # GET books returns json of books in S3
+        # GET /books returns JSON of books in S3
+        # namespaces used by epub opf file
+        namespaces = { 'opf': '{http://www.idpf.org/2007/opf}',
+                        'dc': '{http://purl.org/dc/elements/1.1/}'
+                    }
+
         conn = S3Connection(access, secret)
         bucket = conn.get_bucket('epubjs.books')
+
+        # books list to return as JSON
         books = []
 
         for prefix in bucket.list(delimiter='/'): 
             book = { 'url': prefix.name[:-1] }
             for key in bucket.list(prefix=prefix.name):
-                namespaces = { 'opf': '{http://www.idpf.org/2007/opf}',
-                                'dc': '{http://purl.org/dc/elements/1.1/}'
-                            }
                 if key.name.endswith('content.opf') or key.name.endswith('package.opf'):
-                    # Parse content.opf to find title, author, and cover
+                    # Parse content.opf to find title, author, rights and cover
                     root = ET.fromstring(key.get_contents_as_string())
                     title = root.find('{opf}metadata/{dc}title'.format(**namespaces))
                     if title is not None:
@@ -80,6 +84,9 @@ def books():
                     author = root.find('{opf}metadata/{dc}creator'.format(**namespaces))
                     if author is not None:
                         book['author'] = author.text
+                    rights = root.find('{opf}metadata/{dc}rights'.format(**namespaces))
+                    if rights is not None:
+                        book['rights'] = rights.text.lower()
                     # cover in the manifest does not contain the complete path to the coverpage...
                     #cover = root.find("{opf}manifest/*[@id='coverpage']".format(**namespaces))
                     #if cover is not None:
@@ -89,7 +96,9 @@ def books():
                     # find file in book bucket that endswith cover.jpg (assume this is the cover)
                     book['cover'] = key.name
 
-            books.append(book)
+            # If book rights has public domain, this book is ok to return in JSON library list
+            if 'public domain' in book['rights']:
+                books.append(book)
 
         return jsonify(books=books)
 
@@ -99,7 +108,7 @@ def books():
 def book(book=None, reader_locatiion=None):
 
     if book:
-        # /book/book_name renders the reader with the correct book_location
+        # /book/<book>renders the reader with the correct book_location
         book_location = '/book/'+book+'/'
         book_assets = '../../s3/'+book+'/'
         app.logger.debug(book_location)
@@ -107,23 +116,6 @@ def book(book=None, reader_locatiion=None):
 
     else:
         return render_template("404.html", error_msg="URL Not Found")
-
-
-    """
-    elif book and resource_location:
-        # When epub.js requests book resources at /book/book_name/resource_location
-        # get them from s3
-        #app.logger.debug('/'+str(book) +'/'+resource_location)
-        conn = S3Connection(access, secret)
-        bucket = conn.get_bucket('epubjs.books')
-        k = bucket.get_key('/'+str(book)+'/'+resource_location)
-
-        resp = make_response(k.get_contents_as_string())
-        if k.content_type:
-            resp.headers['Content-Type'] = k.content_type
-
-        return resp
-    """
 
 @app.route('/s3/<path:resource_location>', methods=['GET'])
 def resource(resource_location=None):
