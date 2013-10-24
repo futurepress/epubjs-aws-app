@@ -73,7 +73,7 @@ def books():
         books = []
 
         for prefix in bucket.list(delimiter='/'): 
-            book = { 'url': prefix.name[:-1] }
+            book = { 'url': prefix.name[:-1], 'rights': '' }
             for key in bucket.list(prefix=prefix.name):
                 if key.name.endswith('content.opf') or key.name.endswith('package.opf'):
                     # Parse content.opf to find title, author, rights and cover
@@ -97,8 +97,9 @@ def books():
                     book['cover'] = key.name
 
             # If book rights has public domain, this book is ok to return in JSON library list
-            if 'public domain' in book['rights']:
-                books.append(book)
+            if book['rights']:
+                if 'public domain' in book['rights']:
+                    books.append(book)
 
         return jsonify(books=books)
 
